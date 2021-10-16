@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:loginui/controller/form_validator.dart';
+import 'package:provider/provider.dart';
+
+import 'view/login/Loginscreen.dart';
 
 void main() {
   return runApp(const myApp());
@@ -9,8 +13,11 @@ class myApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
-      home: Home(),
+    return ChangeNotifierProvider(
+      create: (context) => FormValidator(),
+      child: const MaterialApp(
+        home: Home(),
+      ),
     );
   }
 }
@@ -20,6 +27,8 @@ class Home extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold();
+    return const Scaffold(
+      body: Loginscreen(),
+    );
   }
 }
