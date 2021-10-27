@@ -11,7 +11,7 @@ class Loginscreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var validation = Provider.of<FormValidator>(context, listen: true);
+    var validation = Provider.of<LoginFormValidator>(context, listen: true);
     return Scaffold(
       body: SingleChildScrollView(
         child: SafeArea(
@@ -59,6 +59,7 @@ class Loginscreen extends StatelessWidget {
                     TextFormField(
                       style: TextStyle(fontSize: 17),
                       textInputAction: TextInputAction.next,
+                      obscureText: validation.ispassvisible,
                       onChanged: (String password) =>
                           validation.validatePassword(password),
                       decoration: InputDecoration(
@@ -69,7 +70,13 @@ class Loginscreen extends StatelessWidget {
                             "Forgot?",
                             style: TextStyle(fontSize: 14),
                           ),
-                          suffixIcon: Icon(Icons.visibility)),
+                          suffixIcon: GestureDetector(
+                              onTap: () {
+                                validation.changePassVisibility();
+                              },
+                              child: validation.ispassvisible
+                                  ? Icon(Icons.visibility_off)
+                                  : Icon(Icons.visibility))),
                     ),
                   ],
                 )),

@@ -1,7 +1,10 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
+import 'package:loginui/controller/form_validator.dart';
 import 'package:loginui/view/login/Loginscreen.dart';
+import 'package:provider/provider.dart';
 
 class Signupscreen extends StatelessWidget {
   const Signupscreen({Key? key}) : super(key: key);
@@ -158,71 +161,124 @@ class Signupscreen extends StatelessWidget {
   }
 
   Column FormField(BuildContext context) {
+    final validation = Provider.of<SignupFormValidator>(context, listen: true);
     return Column(
       children: [
         TextField(
           maxLength: 20,
           style: TextStyle(fontSize: 17),
           textInputAction: TextInputAction.next,
+          keyboardType: TextInputType.emailAddress,
           decoration: InputDecoration(
               labelText: "Email ID",
               hintText: "Eg: alice@protonmail.com",
+              errorText: validation.email.fielderrorText,
               prefixIcon: Icon(Icons.alternate_email)),
+          onChanged: (String email) {
+            validation.validateEmail(email);
+          },
         ),
         TextField(
           style: TextStyle(fontSize: 17),
           textInputAction: TextInputAction.next,
+          obscureText: true,
           decoration: InputDecoration(
               labelText: "Password",
+              errorText: validation.password.fielderrorText,
               hintText: "Must have minimum 6 characters",
               prefixIcon: Icon(Icons.lock),
               suffixIcon: Icon(Icons.visibility)),
+          onChanged: (passcode) {
+            validation.validatePassword(passcode);
+          },
         ),
         TextField(
           style: TextStyle(fontSize: 17),
           textInputAction: TextInputAction.next,
+          inputFormatters: <TextInputFormatter>[
+            FilteringTextInputFormatter.allow(RegExp("^[a-zA-Z0-9_ ]*")),
+          ],
           decoration: InputDecoration(
               labelText: "Name",
+              errorText: validation.name.fielderrorText,
               hintText: "Alice Smith",
               prefixIcon: Icon(Icons.person)),
+          onChanged: (String name) {
+            validation.validateName(name);
+          },
         ),
         TextField(
           style: TextStyle(fontSize: 17),
           textInputAction: TextInputAction.next,
+          keyboardType: TextInputType.phone,
+          maxLength: 10,
           decoration: InputDecoration(
               labelText: "Phone number",
+              errorText: validation.phone.fielderrorText,
               hintText: "Eg: 7428731210",
               prefixIcon: Icon(Icons.phone)),
+          onChanged: (String phone) {
+            validation.validatePhone(phone);
+          },
         ),
         TextField(
           style: TextStyle(fontSize: 17),
+          keyboardType: TextInputType.streetAddress,
           textInputAction: TextInputAction.next,
-          decoration:
-              InputDecoration(labelText: "House", prefixIcon: Icon(Icons.home)),
+          decoration: InputDecoration(
+              labelText: "House",
+              errorText: validation.house.fielderrorText,
+              prefixIcon: Icon(Icons.home)),
+          onChanged: (String housename) {
+            validation.validateHouse(housename);
+          },
         ),
         TextField(
           style: TextStyle(fontSize: 17),
           textInputAction: TextInputAction.next,
           decoration: InputDecoration(
-              labelText: "City", prefixIcon: Icon(Icons.location_city)),
+              labelText: "City",
+              errorText: validation.city.fielderrorText,
+              prefixIcon: Icon(Icons.location_city)),
+          onChanged: (String city) {
+            validation.validateCity(city);
+          },
         ),
         TextField(
           style: TextStyle(fontSize: 17),
           textInputAction: TextInputAction.next,
           decoration: InputDecoration(
-              labelText: "District", prefixIcon: Icon(Icons.location_on)),
+              labelText: "District",
+              errorText: validation.district.fielderrorText,
+              prefixIcon: Icon(Icons.location_on)),
+          onChanged: (String district) {
+            validation.validateDistrict(district);
+          },
         ),
         TextField(
           style: TextStyle(fontSize: 17),
           textInputAction: TextInputAction.next,
           decoration: InputDecoration(
-              labelText: "State", prefixIcon: Icon(Icons.pin_drop)),
+              labelText: "State",
+              errorText: validation.state.fielderrorText,
+              prefixIcon: Icon(Icons.pin_drop)),
+          onChanged: (String state) {
+            validation.validateState(state);
+          },
         ),
         TextField(
           style: TextStyle(fontSize: 17),
           textInputAction: TextInputAction.done,
+          keyboardType: TextInputType.number,
+          maxLength: 6,
           decoration: InputDecoration(
-              labelText: "Pincode", prefixIcon: Icon(Icons.local_post_office)),
+              hintText: "560001",
+              labelText: "Pincode",
+              errorText: validation.pincode.fielderrorText,
+              prefixIcon: Icon(Icons.local_post_office)),
+          onChanged: (String pincode) {
+            validation.validatePincode(pincode);
+          },
         ),
         SizedBox(
           height: 30,
@@ -231,7 +287,13 @@ class Signupscreen extends StatelessWidget {
           width: MediaQuery.of(context).size.width - 50,
           height: MediaQuery.of(context).size.width * 0.12,
           child: TextButton(
-            onPressed: () {},
+            onPressed: () {
+              print(validation.isValidData);
+
+              if (validation.isValidData) {
+                validation.submitData();
+              }
+            },
             child: Text(
               "Signup",
               style: TextStyle(fontSize: 18),

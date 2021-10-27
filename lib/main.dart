@@ -13,8 +13,14 @@ class myApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (context) => FormValidator(),
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider<LoginFormValidator>(
+          create: (context) => LoginFormValidator(),
+        ),
+        ChangeNotifierProvider<SignupFormValidator>(
+            create: (context) => SignupFormValidator())
+      ],
       child: const MaterialApp(
         home: Home(),
       ),
